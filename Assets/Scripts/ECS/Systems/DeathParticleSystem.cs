@@ -49,8 +49,12 @@ public class DeathParticleSystem : IEcsRunSystem
                         Vector2 explodeVelocity = explode.normalized * Random.Range(0.5f, 1.5f);
                         if (explode.magnitude < 0.5f)
                             parts[p].velocity = explodeVelocity;
-                        else
-                            parts[p].velocity += (parts[p].position - trans.transform.position).normalized * Random.Range(0f, 0.5f);
+                        else 
+                        {
+                            float force = Random.Range(0, 2) == 1 ? 0f : Random.Range(0.1f, 0.2f);
+                            parts[p].velocity += (parts[p].position - trans.transform.position).normalized * force;
+                        }
+                            
                     }
                     particleSystem.SetParticles(parts);
 

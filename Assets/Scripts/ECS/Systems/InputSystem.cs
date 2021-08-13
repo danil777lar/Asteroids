@@ -29,16 +29,22 @@ public class InputSystem : IEcsRunSystem
         foreach (int i in _turboFilter) 
         {
             ref TurboParticlesComponent parts = ref _turboFilter.Get1(i);
-            foreach (ParticleSystem part in parts.forward) part.Stop();
-            foreach (ParticleSystem part in parts.left) part.Stop();
-            foreach (ParticleSystem part in parts.right) part.Stop();
+            List<ParticleSystem> particlesAll = new List<ParticleSystem>();
+            List<ParticleSystem> particlesToPlay = new List<ParticleSystem>();
 
-            if (Input.GetKey("w"))
-                foreach (ParticleSystem part in parts.forward) part.Play();
-            if (Input.GetKey("a"))
-                foreach (ParticleSystem part in parts.left) part.Play();
-            if (Input.GetKey("d"))
-                foreach (ParticleSystem part in parts.right) part.Play();
+            particlesAll.AddRange(parts.forward);
+            particlesAll.AddRange(parts.left);
+            particlesAll.AddRange(parts.right);
+
+            if (Input.GetKey("w")) particlesToPlay.AddRange(parts.forward);
+            if (Input.GetKey("a")) particlesToPlay.AddRange(parts.left);
+            if (Input.GetKey("d")) particlesToPlay.AddRange(parts.right);
+
+            foreach (ParticleSystem p in particlesAll) 
+            {
+                if (!particlesToPlay.Contains(p)) p.Stop();
+                else if (!p.isPlaying) p.Play();
+            }
         }
     }
 }
